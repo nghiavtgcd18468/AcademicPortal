@@ -38,6 +38,7 @@ namespace AcademicPortal.Controllers
 
 		// POST: CourseCategory/Create
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		[AccessAuthorize(Roles = "staff")]
 		public ActionResult Create(CourseCategory model)
 		{
