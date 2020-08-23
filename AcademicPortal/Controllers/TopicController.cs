@@ -39,6 +39,7 @@ namespace AcademicPortal.Controllers
 		// POST: Topic/Create
 		[HttpPost]
 		[AccessAuthorize(Roles = "staff")]
+		[ValidateAntiForgeryToken]
 		public ActionResult Create(Topic model)
 		{
 			_context.Topics.Add(model);
@@ -64,6 +65,7 @@ namespace AcademicPortal.Controllers
 		// POST: Topic/Edit
 		[HttpPost]
 		[AccessAuthorize(Roles = "staff")]
+		[ValidateAntiForgeryToken]
 		public ActionResult Edit(Topic model)
 		{
 			var topicInDb = _context.Topics.SingleOrDefault(p => p.Id == model.Id);
@@ -80,6 +82,7 @@ namespace AcademicPortal.Controllers
 		// DELETE: Topic/delete
 		[HttpPost]
 		[AccessAuthorize(Roles = "staff")]
+		[ValidateAntiForgeryToken]
 		public ActionResult Delete(int id)
 		{
 			var topicToRemove = _context.Topics.SingleOrDefault(p => p.Id == id);

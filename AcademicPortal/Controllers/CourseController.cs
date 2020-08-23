@@ -40,6 +40,7 @@ namespace AcademicPortal.Controllers
 		// POST: Course/Create
 		[HttpPost]
 		[AccessAuthorize(Roles = "staff")]
+		[ValidateAntiForgeryToken]
 		public ActionResult Create(Course model)
 		{
 			_context.Courses.Add(model);
