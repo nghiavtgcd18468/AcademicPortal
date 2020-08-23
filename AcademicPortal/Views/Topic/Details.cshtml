@@ -1,0 +1,128 @@
+﻿@model AcademicPortal.Models.Topic
+@{
+	ViewBag.Title = "Details";
+}
+
+<h2>Topic Details</h2>
+@if (User.IsInRole("staff"))
+{
+<a href="/Topic/Edit/@Model.Id" class="btn btn-warning my-2">
+	<i class="fa fa-edit"></i> Edit
+</a>
+}
+<div class="form-group row">
+	@Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label font-weight-bold" })
+	<div class="col-md-5">
+		<span>@Model.Name</span>
+	</div>
+</div>
+<hr />
+<div class="form-group row">
+	@Html.LabelFor(m => m.Description, new { @class = "col-md-2 control-label font-weight-bold" })
+	<div class="col-md-9">
+		<p class="text-justify">@Model.Description</p>
+	</div>
+</div>
+<hr />
+<div class="form-group row">
+	@Html.LabelFor(m => m.TrainerInfoes, new { @class = "col-md-2 control-label font-weight-bold" })
+	<div class="col-md-9">
+		@if (User.IsInRole("staff"))
+		{
+			<div class="ui-widget mb-3">
+				@using (Html.BeginForm("AddTrainer", "Topic", FormMethod.Post, new { id = "trainerForm" }))
+				{
+					@Html.AntiForgeryToken()
+					<input type="text" id="trainerTags">
+					<input type="hidden" id="userId" name="userId" />
+					<input type="hidden" id="topicId" name="topicId" value="@Model.Id" />
+					<button type="submit" class="btn btn-primary btn-inline">
+						<i class="fa fa-plus-circle"></i> Add
+					</button>
+				}
+			</div>
+		}
+		<table id="Table" class="table">
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Username</th>
+					<th scope="col">Full name</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var trainer in Model.TrainerInfoes)
+				{
+					<tr>
+						<th scope="row">@trainer.UserId</th>
+						<td>@trainer.User.UserName</td>
+						<td>@trainer.FullName</td>
+						@if (User.IsInRole("staff"))
+						{
+							<td style="width: 13rem">
+								@using (Html.BeginForm("RemoveTrainer", "Topic", FormMethod.Post))
+								{
+								<a href="/Profile/Details/@trainer.UserId" class="btn btn-info">
+									<i class="fa fa-info-circle"></i> Details
+								</a>
+									@Html.AntiForgeryToken()
+									<input type="hidden" name="userId" value="@trainer.UserId" />
+									<input type="hidden" id="topicId" name="topicId" value="@Model.Id" />
+									<button type="submit" class="btn btn-danger btn-inline">
+										<i class="fa fa-times"></i> Remove
+									</button>
+								}
+							</td>
+						}
+						else
+						{
+							<td>
+								<a href="/Profile/Details/@trainer.UserId" class="btn btn-info">Details</a>
+							</td>
+						}
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+@section scripts
+{
+	<script>
+		let trainers;
+		$(document).ready(function () {
+			$('#Table').DataTable({
+				"columnDefs": [
+					{ "orderable": false, "targets": 3 }
+				]
+			});
+
+			$.ajax({
+				url: '/api/trainers',
+				success: data => {
+					trainers = data;
+					console.log(data);
+					var trainerTags = data.map(p => p.userName);
+					$(function () {
+						$("#trainerTags").autocomplete({
+							source: trainerTags
+						});
+					});
+				}
+			})
+
+			$(function () {
+				$("#trainerForm").submit(function (e) {
+					let username = $("#trainerTags").val()
+					let trainer = trainers.find(p => p.userName == username);
+					document.getElementById("userId").value = trainer.id;
+				});
+			});
+		});
+	</script>
+}
+
+
+

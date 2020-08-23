@@ -1,0 +1,100 @@
+﻿@model AcademicPortal.Models.RegisterViewModel
+@{
+	ViewBag.Title = "Register";
+}
+
+<h2>@ViewBag.Title.</h2>
+
+@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form", style = "width: 60%" }))
+{
+	@Html.AntiForgeryToken()
+	<h4>Create a new account.</h4>
+	<hr />
+	@Html.ValidationSummary("", new { @class = "text-danger" })
+	<div class="form-group row">
+		@Html.LabelFor(m => m.Email, new { @class = "col-md-3 control-label" })
+		<div class="col-md-5">
+			@Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+		</div>
+	</div>
+	<div class="form-group row">
+		@Html.LabelFor(m => m.UserName, new { @class = "col-md-3 control-label" })
+		<div class="col-md-5">
+			@Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+		</div>
+	</div>
+	<div class="form-group row">
+		@Html.LabelFor(m => m.Password, new { @class = "col-md-3 control-label" })
+		<div class="col-md-5">
+			@Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+		</div>
+	</div>
+	<div class="form-group row">
+		@Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-3 control-label" })
+		<div class="col-md-5">
+			@Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+		</div>
+	</div>
+	<fieldset class="form-group">
+		<div class="row">
+			@Html.LabelFor(p => p.UserRoleId, new { @class = "col-md-3 control-label pt-0" })
+			<div class="col-sm-5">
+				@foreach (var role in Model.Roles)
+				{
+					<div class="form-check form-check-inline">
+						<input class="form-check-input" onclick="OnClickUserRole(this.value)" type="radio" name="UserRoleId" id="@role.Id" value="@role.Id">
+						<label class="form-check-label" for="@role.Id">
+							@role.Name
+						</label>
+					</div>
+				}
+			</div>
+		</div>
+	</fieldset>
+	<div class="form-group row">
+		@Html.LabelFor(m => m.UserInfo.FullName, new { @class = "col-md-3 control-label" })
+		<div class="col-md-5">
+			@Html.TextBoxFor(m => m.UserInfo.FullName, new { @class = "form-control" })
+		</div>
+	</div>
+	<div class="form-group row">
+		@Html.LabelFor(m => m.UserInfo.Address, new { @class = "col-md-3 control-label" })
+		<div class="col-md-5">
+			@Html.TextBoxFor(m => m.UserInfo.Address, new { @class = "form-control" })
+		</div>
+	</div>
+	<div class="form-group row">
+		@Html.LabelFor(m => m.UserInfo.DateOfBirth, new { @class = "col-md-3 control-label" })
+		<div class="input-group date col-md-5" id="datetimepicker">
+			<input type="text" class="form-control" name="UserInfo.DateOfBirth" />
+			<span class="input-group-addon d-flex justify-content-center align-items-center text-white bg-dark px-3">
+				<i class="fa fa-calendar"></i>
+			</span>
+		</div>
+	</div>
+	<div class="form-group row">
+		@Html.LabelFor(m => m.UserInfo.PhoneNumber, new { @class = "col-md-3 control-label" })
+		<div class="col-md-5">
+			@Html.TextBoxFor(m => m.UserInfo.PhoneNumber, new { @class = "form-control" })
+		</div>
+	</div>
+	<div class="form-group" id="register-button">
+		<div class="col-md-offset-2 col-md-10 d-flex justify-content-center">
+			<button type="submit" class="btn btn-primary">
+				<i class="fa fa-user-plus"></i> Register
+			</button>
+		</div>
+	</div>
+}
+
+@section Scripts {
+	@Scripts.Render("~/bundles/jqueryval")
+	<script>
+		var model = @Html.Raw(Json.Encode(Model));
+
+		$(`#${model.Roles[0].Id}`).prop('checked', true);
+		$('#datetimepicker').datetimepicker({
+			format: 'MM/DD/yyyy'
+		})
+	</script>
+}

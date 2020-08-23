@@ -1,0 +1,73 @@
+﻿@model AcademicPortal.ViewModels.AdminEditViewModel
+@{
+	ViewBag.Title = "Edit";
+}
+
+<h2>Edit account</h2>
+
+@using (Html.BeginForm("Delete", "Account", FormMethod.Post))
+{
+	@Html.AntiForgeryToken()
+	<input type="hidden" name="id" value="@Model.UserId" />
+	<button type="submit" class="btn btn-danger btn-inline">
+		<i class="fa fa-times"></i> Delete
+	</button>
+}
+
+@using (Html.BeginForm("AdminEdit", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form", style = "width: 60%" }))
+{
+	@Html.AntiForgeryToken()
+	<hr />
+	@Html.ValidationSummary("", new { @class = "text-danger" })
+	@Html.HiddenFor(p => p.UserId)
+	<div class="form-group row">
+		@Html.LabelFor(m => m.UserName, new { @class = "col-md-2 control-label" })
+		<div class="col-md-5">
+			@Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+		</div>
+	</div>
+	<div class="form-group row">
+		@Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+		<div class="col-md-5">
+			@Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+		</div>
+	</div>
+	<div class="form-group row">
+		@Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
+		<div class="col-md-5">
+			@Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+		</div>
+	</div>
+	<fieldset class="form-group">
+		<div class="row">
+			@Html.LabelFor(p => p.UserRoleId, new { @class = "col-md-2 control-label pt-0" })
+			<div class="col-sm-10">
+				@foreach (var role in Model.Roles)
+				{
+					<div class="form-check">
+						<input class="form-check-input" type="radio" name="UserRoleId" id="@role.Id" value="@role.Id">
+						<label class="form-check-label" for="@role.Id">
+							@role.Name
+						</label>
+					</div>
+				}
+			</div>
+		</div>
+	</fieldset>
+	<div class="form-group">
+		<div class="col-md-offset-2 col-md-10 d-flex justify-content-center">
+			<button type="submit" class="btn btn-primary ">
+				<i class="fa fa-edit"></i> Update
+			</button>
+		</div>
+	</div>
+}
+
+@section Scripts {
+	@Scripts.Render("~/bundles/jqueryval")
+	<script>
+		var model = @Html.Raw(Json.Encode(Model));
+		$(`#${model.UserRoleId}`).prop("checked", true);
+	</script>
+}
+

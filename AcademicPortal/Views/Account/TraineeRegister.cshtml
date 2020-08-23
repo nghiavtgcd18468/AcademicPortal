@@ -1,0 +1,96 @@
+﻿@model AcademicPortal.ViewModels.TraineeRegisterViewModel
+@{
+	ViewBag.Title = "Register";
+}
+
+<h2>@ViewBag.Title.</h2>
+
+@using (Html.BeginForm("RegisterForTrainee", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form", style = "width: 60%" }))
+{
+	@Html.AntiForgeryToken()
+	<h4>Create a trainee account.</h4>
+	<hr />
+	@Html.ValidationSummary("", new { @class = "text-danger" })
+	<div class="form-group row">
+		@Html.LabelFor(m => m.Email, new { @class = "col-md-3 control-label" })
+		<div class="col-md-5">
+			@Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+		</div>
+	</div>
+	<div class="form-group row">
+		@Html.LabelFor(m => m.TraineeInfo.FullName, new { @class = "col-md-3 control-label" })
+		<div class="col-md-5">
+			@Html.TextBoxFor(m => m.TraineeInfo.FullName, new { @class = "form-control" })
+		</div>
+	</div>
+	<div class="form-group row">
+		@Html.LabelFor(m => m.TraineeInfo.Address, new { @class = "col-md-3 control-label" })
+		<div class="col-md-5">
+			@Html.TextBoxFor(m => m.TraineeInfo.Address, new { @class = "form-control" })
+		</div>
+	</div>
+	<div class="form-group row">
+		@Html.LabelFor(m => m.TraineeInfo.DateOfBirth, new { @class = "col-md-3 control-label" })
+		<div class="input-group date col-md-5" id="datetimepicker">
+			@Html.EditorFor(model => model.TraineeInfo.DateOfBirth, new { htmlAttributes = new { @class = "form-control" } })
+			@*<span class="input-group-addon d-flex justify-content-center align-items-center text-white bg-dark px-3">
+					<i class="fa fa-calendar"></i>
+				</span>*@
+		</div>
+	</div>
+	<div class="form-group row">
+		@Html.LabelFor(m => m.TraineeInfo.TOEICScore, new { @class = "col-md-3 control-label" })
+		<div class="col-md-5">
+			@Html.TextBoxFor(m => m.TraineeInfo.TOEICScore, new { @class = "form-control", @type = "number" })
+		</div>
+	</div>
+	<div class="form-group row">
+		@Html.LabelFor(p => p.DepartmentId, new { @class = "col-md-3 control-label" })
+		<div class="col-md-5">
+			@Html.DropDownListFor(p => p.DepartmentId, new SelectList(Model.Deparments, "Id", "Name"), "Select Category Name",
+				new { @class = "form-control" })
+		</div>
+	</div>
+	<div class="form-group row">
+		@Html.LabelFor(m => m.TraineeInfo.PhoneNumber, new { @class = "col-md-3 control-label" })
+		<div class="col-md-5">
+			@Html.TextBoxFor(m => m.TraineeInfo.PhoneNumber, new { @class = "form-control" })
+		</div>
+	</div>
+	<div class="form-group row">
+		@Html.LabelFor(m => m.UserName, new { @class = "col-md-3 control-label" })
+		<div class="col-md-5">
+			@Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+		</div>
+	</div>
+	<div class="form-group row">
+		@Html.LabelFor(m => m.Password, new { @class = "col-md-3 control-label" })
+		<div class="col-md-5">
+			@Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+		</div>
+	</div>
+	<div class="form-group row">
+		@Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-3 control-label" })
+		<div class="col-md-5">
+			@Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-md-offset-2 col-md-10 d-flex justify-content-center">
+			<button type="submit" class="btn btn-primary">
+				<i class="fa fa-user-plus"></i> Register
+			</button>
+		</div>
+	</div>
+}
+
+@section Scripts {
+	@Scripts.Render("~/bundles/jqueryval")
+	<script>
+		$('#TraineeInfo_DateOfBirth').datetimepicker({
+			format: 'MM/DD/YYYY',
+			sideBySide: true,
+			showTodayButton: true
+		});
+	</script>
+}

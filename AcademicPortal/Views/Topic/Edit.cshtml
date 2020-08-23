@@ -1,0 +1,42 @@
+﻿@model AcademicPortal.Models.Topic
+@{
+	ViewBag.Title = "Edit";
+}
+
+<h4>Edit topic.</h4>
+
+@using (Html.BeginForm("Delete", "Topic", FormMethod.Post))
+{
+	@Html.AntiForgeryToken()
+	<input type="hidden" name="id" value="@Model.Id" />
+	<button type="submit" class="btn btn-danger btn-inline">
+		<i class="fa fa-times"></i> Delete
+	</button>
+}
+
+@using (Html.BeginForm("Edit", "Topic", FormMethod.Post, new { @class = "form-horizontal", role = "form", style = "width: 60%" }))
+{
+	@Html.AntiForgeryToken()
+	<hr />
+	@Html.ValidationSummary("", new { @class = "text-danger" })
+	<div class="form-group row">
+		@Html.LabelFor(m => m.Name, new { @class = "col-md-3 control-label" })
+		<div class="col-md-5">
+			@Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+		</div>
+	</div>
+	<div class="form-group row">
+		@Html.LabelFor(m => m.Description, new { @class = "col-md-3 control-label" })
+		<div class="col-md-9">
+			@Html.TextAreaFor(m => m.Description, new { @class = "form-control", @rows = "10", @cols = "40" })
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-md-offset-2 col-md-10 d-flex justify-content-center">
+			<button type="submit" class="btn btn-primary">
+				<i class="fa fa-edit"></i> Update
+			</button>
+		</div>
+	</div>
+}
+

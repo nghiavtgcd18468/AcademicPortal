@@ -1,0 +1,55 @@
+﻿@model IEnumerable<AcademicPortal.Models.Topic>
+@{
+	ViewBag.Title = "Index";
+}
+
+<h2>View topics</h2>
+@if (User.IsInRole("staff"))
+{
+	<div class="btn btn-primary mb-3">
+		<a href="/Topic/Create" class="text-decoration-none text-white">
+			<i class="fa fa-plus-circle"></i> New Topic
+		</a>
+	</div>
+}
+
+<table id="Table" class="table">
+	<thead class="thead-dark">
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col">Name</th>
+			<th scope="col">Description</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<th scope="row">@item.Id</th>
+				<td>@item.Name</td>
+				<td class="text-justify">@item.Description</td>
+				<td style="width: 6rem">
+					<a href="/Topic/Details/@item.Id" class="btn btn-info">
+						<i class="fa fa-info-circle"></i> Details
+					</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+@section scripts
+{
+	<script>
+		$(document).ready(function () {
+			$('#Table').DataTable({
+				"columnDefs": [
+					{ "orderable": false, "targets": 3 }
+				]
+			});
+		});
+	</script>
+}
+
+

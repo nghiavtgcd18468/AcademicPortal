@@ -1,0 +1,12 @@
+﻿@model IEnumerable<AcademicPortal.Models.Topic>
+@{
+	ViewBag.Title = "TrainerHome";
+}
+
+<h2>My Topics</h2>
+<div class="list-group">
+	@foreach (var topic in Model)
+	{
+		<a href="/Topic/Details/@topic.Id" class="list-group-item list-group-item-action">@topic.Name</a>
+	}
+</div>

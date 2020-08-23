@@ -1,0 +1,47 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+	using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+	{
+		@Html.AntiForgeryToken()
+
+		<div class="nav navbar-nav navbar-right">
+			<div class="d-flex justify-content-center align-items-center mr-2">
+				<span class="text-white">Hello @User.Identity.GetUserName()!</span>
+			</div>
+			<div class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color: #fff; text-decoration: none; display: flex; justify-content: center; align-items: center">
+					<div style="
+					background-color: darksalmon;
+					color: #fff;
+					font-weight: 100;
+					font-size: 1rem;
+					padding: 0.6rem;
+					border-radius: 20%;
+					margin-right: 0.3rem">
+						NG
+					</div>
+				</a>
+				<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+					<a href="/Profile" class="dropdown-item"><i class="fa fa-user-o"></i> Profile</a>
+					<a href="#" class="dropdown-item"><i class="fa fa-sliders"></i> Settings</a>
+					<div class="dropdown-divider"></div>
+					<a href="javascript:document.getElementById('logoutForm').submit()" class="dropdown-item"><i class="fa fa-sign-out"></i> Logout</a>
+				</div>
+			</div>
+		</div>
+
+		@*<ul class="nav navbar-nav navbar-right">
+				<li>
+					@Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+				</li>
+				<li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+			</ul>*@
+	}
+}
+else
+{
+	<ul class="nav navbar-nav navbar-right">
+		<li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", style = "color:#fff;text-decoration:none" })</li>
+	</ul>
+}

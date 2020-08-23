@@ -1,0 +1,65 @@
+﻿@model AcademicPortal.ViewModels.StaffEditViewModel
+@{
+	ViewBag.Title = "Edit";
+}
+
+<h2>Edit account</h2>
+
+@using (Html.BeginForm("Delete", "Account", FormMethod.Post))
+{
+	@Html.AntiForgeryToken()
+	<input type="hidden" name="id" value="@Model.UserId" />
+	<button type="submit" class="btn btn-danger btn-inline">
+		<i class="fa fa-times"></i> Delete
+	</button>
+}
+
+@using (Html.BeginForm("StaffEdit", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form", style = "width: 60%" }))
+{
+	@Html.AntiForgeryToken()
+	<hr />
+	@Html.ValidationSummary("", new { @class = "text-danger" })
+	@Html.HiddenFor(p => p.UserId)
+	@Html.HiddenFor(p => p.RoleId)
+	<div class="form-group row">
+		@Html.LabelFor(m => m.Email, new { @class = "col-md-3 control-label" })
+		<div class="col-md-5">
+			@Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+		</div>
+	</div>
+	<div class="form-group row">
+		@Html.LabelFor(m => m.UserName, new { @class = "col-md-3 control-label" })
+		<div class="col-md-5">
+			@Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+		</div>
+	</div>
+	<div class="form-group row">
+		@Html.LabelFor(m => m.Password, new { @class = "col-md-3 control-label" })
+		<div class="col-md-5">
+			@Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+		</div>
+	</div>
+	<div class="form-group row">
+		@Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-3 control-label" })
+		<div class="col-md-5">
+			@Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+		</div>
+	</div>
+
+	if (Model.RoleName == "Trainer")
+	{
+		@Html.Partial("AccountEdit/_TrainerAccountEdit")
+	}
+	else if (Model.RoleName == "Trainee")
+	{
+		@Html.Partial("AccountEdit/_TraineeAccountEdit")
+	}
+
+	<div class="form-group">
+		<div class="col-md-offset-2 col-md-10 d-flex justify-content-center">
+			<button type="submit" class="btn btn-primary ">
+				<i class="fa fa-edit"></i> Update
+			</button>
+		</div>
+	</div>
+}

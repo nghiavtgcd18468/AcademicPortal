@@ -1,0 +1,55 @@
+﻿@model IEnumerable<AcademicPortal.ViewModels.UserViewModel>
+@{
+	ViewBag.Title = "Account management";
+}
+
+<h2>View accounts</h2>
+<div class="btn btn-primary mb-3">
+	<a href="/Account/Register" class="text-decoration-none text-white">
+		<i class="fa fa-plus-circle"></i> New Account
+	</a>
+</div>
+
+<table id="accountTable" class="table">
+	<thead class="thead-dark">
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col">Username</th>
+			<th scope="col">Name</th>
+			<th scope="col">Email</th>
+			<th scope="col">Role</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var user in Model)
+		{
+			<tr>
+				<th scope="row">@user.User.Id</th>
+				<td>@user.User.UserName</td>
+				<td>@user.FullName</td>
+				<td>@user.User.Email</td>
+				<td>@user.RoleName</td>
+				<td>
+					<a href="/Profile/Details/@user.User.Id" class="btn btn-info">
+						<i class="fa fa-info-circle"></i> Details
+					</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+@section scripts
+{
+	<script>
+		$(document).ready(function () {
+			$('#accountTable').DataTable({
+				"columnDefs": [
+					{ "orderable": false, "targets": 5 }
+				]
+			});
+		});
+	</script>
+}
+

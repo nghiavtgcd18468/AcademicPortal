@@ -1,0 +1,221 @@
+﻿@model AcademicPortal.Models.Course
+@{
+	ViewBag.Title = "Details";
+}
+
+<h2>Course Details</h2>
+@if (User.IsInRole("staff"))
+{
+<a href="/Course/Edit/@Model.Id" class="btn btn-warning my-2">
+	<i class="fa fa-edit"></i> Edit
+</a>
+}
+<div class="form-group row">
+	@Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label font-weight-bold" })
+	<div class="col-md-5">
+		<span>@Model.Name</span>
+	</div>
+</div>
+<hr />
+<div class="form-group row">
+	@Html.LabelFor(m => m.Description, new { @class = "col-md-2 control-label font-weight-bold" })
+	<div class="col-md-9">
+		<p class="text-justify">@Model.Description</p>
+	</div>
+</div>
+<hr />
+<div class="form-group row">
+	@Html.LabelFor(m => m.Topics, new { @class = "col-md-2 control-label font-weight-bold" })
+	<div class="col-md-9">
+		@if (User.IsInRole("staff"))
+		{
+			<div class="ui-widget mb-3">
+				@using (Html.BeginForm("AddTopic", "Course", FormMethod.Post, new { id = "topicForm" }))
+				{
+					@Html.AntiForgeryToken()
+					<input type="text" id="topicTags">
+					<input type="hidden" id="topicId" name="topicId" />
+					<input type="hidden" id="courseId" name="courseId" value="@Model.Id" />
+					<button type="submit" class="btn btn-primary btn-inline">
+						<i class="fa fa-plus-circle"></i> Add
+					</button>
+				}
+			</div>
+		}
+		<table id="TopicTable" class="table">
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Name</th>
+					<th scope="col">Description</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model.Topics)
+				{
+					<tr>
+						<th scope="row">@item.Id</th>
+						<td>@item.Name</td>
+						<td class="text-justify">@item.Description</td>
+						@if (User.IsInRole("staff"))
+						{
+							<td style="width: 13rem">
+								@using (Html.BeginForm("RemoveTopic", "Course", FormMethod.Post))
+								{
+									<a href="/Topic/Details/@item.Id" class="btn btn-info">
+										<i class="fa fa-info-circle"></i> Details
+									</a>
+									@Html.AntiForgeryToken()
+									<input type="hidden" name="topicId" value="@item.Id" />
+									<input type="hidden" id="courseId" name="courseId" value="@Model.Id" />
+									<button type="submit" class="btn btn-danger btn-inline">
+										<i class="fa fa-times"></i> Remove
+									</button>
+								}
+							</td>
+						}
+						else
+						{
+							<td>
+								<a href="/Topic/Details/@item.Id" class="btn btn-info">
+									<i class="fa fa-info-circle"></i> Details
+								</a>
+							</td>
+						}
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="form-group row">
+	@Html.LabelFor(m => m.TraineeInfoes, new { @class = "col-md-2 control-label font-weight-bold" })
+	<div class="col-md-9">
+		@if (User.IsInRole("staff"))
+		{
+			<div class="ui-widget mb-3">
+				@using (Html.BeginForm("AddTrainee", "Course", FormMethod.Post, new { id = "traineeForm" }))
+				{
+					@Html.AntiForgeryToken()
+					<input type="text" id="traineeTags">
+					<input type="hidden" id="userId" name="userId" />
+					<input type="hidden" id="courseId" name="courseId" value="@Model.Id" />
+					<button type="submit" class="btn btn-primary btn-inline">
+						<i class="fa fa-plus-circle"></i> Add
+					</button>
+				}
+			</div>
+		}
+		<table id="TraineeTable" class="table">
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col">#</th>
+					<th>Username</th>
+					<th>Full Name</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var trainee in Model.TraineeInfoes)
+				{
+					<tr>
+						<th scope="row">@trainee.UserId</th>
+						<td>@trainee.User.UserName</td>
+						<td>@trainee.FullName</td>
+						@if (User.IsInRole("staff"))
+						{
+							<td>
+								@using (Html.BeginForm("RemoveTrainee", "Course", FormMethod.Post))
+								{
+								<a href="/Profile/Details/@trainee.UserId" class="btn btn-info">
+									<i class="fa fa-info-circle"></i> Details
+								</a>
+									@Html.AntiForgeryToken()
+									<input type="hidden" name="userId" value="@trainee.UserId" />
+									<input type="hidden" id="courseId" name="courseId" value="@Model.Id" />
+									<button type="submit" class="btn btn-danger btn-inline">
+										<i class="fa fa-times"></i> Remove
+									</button>
+								}
+							</td>
+						}
+						else
+						{
+							<td>
+								<a href="/Profile/Details/@trainee.UserId" class="btn btn-info">
+									<i class="fa fa-info-circle"></i> Details
+								</a>
+							</td>
+						}
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+@section scripts
+{
+	<script>
+		let topics;
+		let users;
+		$(document).ready(function () {
+			$('#TopicTable').DataTable({
+				"columnDefs": [
+					{ "orderable": false, "targets": 3 }
+				]
+			});
+			$('#TraineeTable').DataTable({
+				"columnDefs": [
+					{ "orderable": false, "targets": 3 }
+				]
+			});
+
+			$.ajax({
+				url: '/api/topics',
+				success: data => {
+					$(function () {
+						topics = data;
+						let topicTags = data.map(p => p.name);
+						$("#topicTags").autocomplete({
+							source: topicTags
+						});
+					});
+				}
+			})
+
+			$.ajax({
+				url: '/api/trainees',
+				success: data => {
+					users = data;
+					let usernameTags = data.map(p => p.userName)
+					$(function () {
+						$("#traineeTags").autocomplete({
+							source: usernameTags
+						});
+					});
+				}
+			})
+
+			$(function () {
+				$("#topicForm").submit(function (e) {
+					let name = $("#topicTags").val()
+					let topic = topics.find(p => p.name == name);
+					document.getElementById("topicId").value = topic.id;
+				});
+			});
+			$(function () {
+				$("#traineeForm").submit(function (e) {
+					let username = $("#traineeTags").val()
+					let user = users.find(p => p.userName == username);
+					document.getElementById("userId").value = user.id;
+				});
+			});
+		});
+	</script>
+}
+
+
+
